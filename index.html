@@ -213,13 +213,9 @@ html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
             </div>
         </div>
         <div class="flex items-center gap-3">
-            <!-- Supabase Status Badge -->
-            <div id="supabase-badge" onclick="openSupabaseConfig()" class="cursor-pointer" title="Configurar banco de dados">
-                <span class="text-xs bg-yellow-900/50 border border-yellow-700 text-yellow-400 px-2 py-1 rounded-full">💾 Local</span>
-            </div>
-            <!-- OpenAI Config Button -->
-            <div onclick="openAIConfig()" class="cursor-pointer" title="Configurar IA">
-                <span id="ai-badge" class="text-xs bg-purple-900/50 border border-purple-700 text-purple-400 px-2 py-1 rounded-full">🤖 IA</span>
+            <!-- Admin Config Button (protegido por senha) -->
+            <div onclick="openAdminConfig()" class="cursor-pointer" title="Configurações Admin">
+                <span id="admin-badge" class="text-xs bg-gray-800/50 border border-gray-700 text-gray-500 px-2 py-1 rounded-full">⚙️</span>
             </div>
             <!-- Language Selector -->
             <div class="relative">
@@ -3336,131 +3332,6 @@ Responda em JSON exato sem markdown:
         button.disabled = false;
         button.innerHTML = '<i class="fas fa-robot mr-2"></i>Gerar Diagnóstico e Orçamento IA (B2B com Desconto)';
     }
-        
-        button.disabled = true;
-        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Analisando com IA... (Aguarde 3s)';
-        
-        // Simula processamento
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        
-        // Dados simulados do diagnóstico
-        const marca = document.getElementById('dealer-marca').value || 'BMW';
-        const modelo = document.getElementById('dealer-modelo').value || 'X5';
-        const ano = document.getElementById('dealer-ano').value || '2022';
-        const descricao = document.getElementById('dealer-descricao').value || 'Veículo com riscos na pintura';
-        const isUrgente = document.getElementById('dealer-urgente').checked;
-        
-        // Preço base (simulado)
-        let precoBase = 450.00;
-        if (descricao.toLowerCase().includes('cerâmica') || descricao.toLowerCase().includes('proteção')) {
-            precoBase = 850.00;
-        }
-        
-        // Desconto B2B (15% para dealers)
-        const descontoB2B = 0.15;
-        const precoComDesconto = precoBase * (1 - descontoB2B);
-        const precoFinal = isUrgente ? precoComDesconto * 1.1 : precoComDesconto; // 10% adicional se urgente
-        
-        // Resultado do diagnóstico
-        resultDiv.innerHTML = `
-            <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-2xl border border-[#3B82F6]/30 shadow-xl">
-                <div class="text-center mb-6">
-                    <div class="inline-block p-4 bg-[#34D399]/20 rounded-xl mb-3">
-                        <i class="fas fa-check-circle text-4xl text-[#34D399]"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-[#34D399] mb-2">Diagnóstico Completo!</h3>
-                    <p class="text-gray-400">Análise IA concluída com sucesso</p>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-6 mb-6">
-                    <!-- Relatório IA -->
-                    <div class="bg-gray-700/50 p-5 rounded-xl">
-                        <h4 class="text-lg font-bold mb-3 text-[#3B82F6] flex items-center">
-                            <i class="fas fa-chart-line mr-2"></i>Relatório de Condição IA
-                        </h4>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-300">Brilho do Verniz:</span>
-                                <span class="font-bold text-green-400">85%</span>
-                            </div>
-                            <div class="score-gauge"><div class="h-full bg-green-500" style="width: 85%;"></div></div>
-                            
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-300">Risco de Oxidação:</span>
-                                <span class="font-bold text-yellow-400">40%</span>
-                            </div>
-                            <div class="score-gauge"><div class="h-full bg-yellow-500" style="width: 40%;"></div></div>
-                            
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-300">Sujeira Interior:</span>
-                                <span class="font-bold text-red-400">55%</span>
-                            </div>
-                            <div class="score-gauge"><div class="h-full bg-red-500" style="width: 55%;"></div></div>
-                        </div>
-                    </div>
-
-                    <!-- Orçamento B2B -->
-                    <div class="bg-gradient-to-br from-[#FBBF24] to-[#F59E0B] p-5 rounded-xl">
-                        <h4 class="text-lg font-bold mb-3 text-black flex items-center">
-                            <i class="fas fa-tag mr-2"></i>Orçamento B2B
-                        </h4>
-                        <div class="space-y-2 mb-4">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-black/70">Preço Base:</span>
-                                <span class="font-semibold text-black">$ ${precoBase.toFixed(2)}</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-black/70">Desconto B2B (15%):</span>
-                                <span class="font-semibold text-green-700">- $ ${(precoBase * descontoB2B).toFixed(2)}</span>
-                            </div>
-                            ${isUrgente ? `
-                            <div class="flex justify-between text-sm">
-                                <span class="text-black/70">Taxa Urgente (10%):</span>
-                                <span class="font-semibold text-black">+ $ ${(precoComDesconto * 0.1).toFixed(2)}</span>
-                            </div>
-                            ` : ''}
-                            <div class="border-t border-black/20 pt-2 mt-2">
-                                <div class="flex justify-between">
-                                    <span class="font-bold text-black">Total Final:</span>
-                                    <span class="text-2xl font-extrabold text-black">$ ${precoFinal.toFixed(2)}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="text-xs text-black/70">${isUrgente ? '⚠️ Serviço Urgente - Prioridade Alta' : '✓ Preço com desconto B2B aplicado'}</p>
-                    </div>
-                </div>
-
-                <div class="bg-gray-700/50 p-4 rounded-xl mb-4">
-                    <h4 class="font-bold mb-2 text-[#FBBF24]">Detalhes do Veículo:</h4>
-                    <p class="text-sm text-gray-300"><strong>Marca/Modelo:</strong> ${marca} ${modelo}</p>
-                    <p class="text-sm text-gray-300"><strong>Ano:</strong> ${ano}</p>
-                    <p class="text-sm text-gray-300"><strong>Descrição:</strong> ${descricao}</p>
-                </div>
-
-                <div class="flex gap-4">
-                    <button onclick="confirmarDealerOrcamento(${precoFinal})" class="flex-1 py-3 bg-gradient-to-r from-[#34D399] to-[#10B981] hover:from-[#10B981] hover:to-[#059669] text-white font-bold rounded-xl transition shadow-lg">
-                        <i class="fas fa-check mr-2"></i>Confirmar Orçamento
-                    </button>
-                    <button onclick="showScreen('dealer-dashboard')" class="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-xl transition">
-                        Voltar
-                    </button>
-                </div>
-            </div>
-        `;
-        
-        resultDiv.classList.remove('hidden');
-        button.disabled = false;
-        button.innerHTML = '<i class="fas fa-robot mr-2"></i>Gerar Diagnóstico e Orçamento IA (B2B com Desconto)';
-        
-        // Notifica o dealer sobre o diagnóstico final
-        const dealerSalvo = JSON.parse(localStorage.getItem('dealer_logado') || 'null');
-        if (dealerSalvo) {
-            mostrarNotificacaoDealer('diagnostico', `Diagnóstico final gerado para ${marca} ${modelo}! Orçamento: $${precoFinal.toFixed(2)}`);
-        }
-        
-        // Scroll para o resultado
-        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
 
     // Confirmar orçamento do dealer
     function confirmarDealerOrcamento(preco) {
@@ -6338,6 +6209,99 @@ Responda em JSON exato sem markdown:
 </script>
 
 
+<!-- Admin Password Modal -->
+<div id="admin-password-modal" class="hidden fixed inset-0 bg-black/80 z-[300] flex items-center justify-center p-4">
+    <div class="bg-[#161B22] border border-gray-700 rounded-2xl p-6 max-w-sm w-full">
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-gradient-to-br from-[#FBBF24] to-[#F59E0B] rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <i class="fas fa-shield-alt text-black text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white">Área Restrita</h3>
+            <p class="text-sm text-gray-400 mt-1">Digite a senha de administrador</p>
+        </div>
+        <input id="admin-pass-input" type="password" placeholder="Senha admin..."
+            class="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:border-[#FBBF24] outline-none mb-3"
+            onkeydown="if(event.key==='Enter') checkAdminPass()">
+        <div id="admin-pass-error" class="hidden text-red-400 text-xs mb-3 text-center">❌ Senha incorreta</div>
+        <div class="flex gap-3">
+            <button onclick="checkAdminPass()" class="flex-1 py-3 bg-gradient-to-r from-[#FBBF24] to-[#F59E0B] text-black font-bold rounded-xl">
+                Entrar
+            </button>
+            <button onclick="closeAdminPassModal()" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-xl">
+                Cancelar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Panel Modal -->
+<div id="admin-panel-modal" class="hidden fixed inset-0 bg-black/80 z-[250] flex items-center justify-center p-4">
+    <div class="bg-[#161B22] border border-gray-700 rounded-2xl p-6 max-w-md w-full">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-[#FBBF24] to-[#F59E0B] rounded-xl flex items-center justify-center">
+                    <i class="fas fa-shield-alt text-black"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">Painel Admin</h3>
+            </div>
+            <button onclick="closeAdminPanel()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        </div>
+
+        <!-- Supabase Config -->
+        <div class="bg-gray-800/50 rounded-xl p-4 mb-4">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-lg">🗄️</span>
+                    <span class="font-bold text-white text-sm">Banco de Dados (Supabase)</span>
+                </div>
+                <span id="supabase-badge" class="text-xs bg-yellow-900/50 border border-yellow-700 text-yellow-400 px-2 py-1 rounded-full">💾 Local</span>
+            </div>
+            <input id="supabase-url-input" type="text" placeholder="https://xxxx.supabase.co"
+                class="w-full p-2 bg-gray-900 border border-gray-700 rounded-lg text-white text-xs mb-2 focus:border-[#3B82F6] outline-none">
+            <input id="supabase-key-input" type="password" placeholder="eyJhbGciOiJIUzI1NiIs..."
+                class="w-full p-2 bg-gray-900 border border-gray-700 rounded-lg text-white text-xs mb-2 focus:border-[#3B82F6] outline-none">
+            <button onclick="saveSupabaseConfig()" class="w-full py-2 bg-[#3B82F6] hover:bg-blue-700 text-white text-xs font-bold rounded-lg">
+                ✅ Salvar Supabase
+            </button>
+        </div>
+
+        <!-- OpenAI Config -->
+        <div class="bg-gray-800/50 rounded-xl p-4 mb-4">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-lg">🤖</span>
+                    <span class="font-bold text-white text-sm">IA Diagnóstico (OpenAI)</span>
+                </div>
+                <span id="ai-badge" class="text-xs bg-purple-900/50 border border-purple-700 text-purple-400 px-2 py-1 rounded-full">🤖 IA</span>
+            </div>
+            <input id="openai-key-input" type="password" placeholder="sk-proj-..."
+                class="w-full p-2 bg-gray-900 border border-gray-700 rounded-lg text-white text-xs mb-2 focus:border-purple-500 outline-none">
+            <button onclick="saveAIConfig()" class="w-full py-2 bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold rounded-lg">
+                ✅ Salvar Chave OpenAI
+            </button>
+        </div>
+
+        <!-- Change Admin Password -->
+        <div class="bg-gray-800/50 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-3">
+                <span class="text-lg">🔑</span>
+                <span class="font-bold text-white text-sm">Alterar Senha Admin</span>
+            </div>
+            <input id="new-admin-pass" type="password" placeholder="Nova senha..."
+                class="w-full p-2 bg-gray-900 border border-gray-700 rounded-lg text-white text-xs mb-2 focus:border-[#FBBF24] outline-none">
+            <button onclick="changeAdminPass()" class="w-full py-2 bg-[#FBBF24] hover:bg-yellow-500 text-black text-xs font-bold rounded-lg">
+                🔒 Alterar Senha
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- OpenAI Config Modal (mantido para compatibilidade) -->
+<div id="openai-modal" class="hidden"></div>
+
+<!-- Supabase Config Modal (mantido para compatibilidade) -->
+<div id="supabase-modal" class="hidden"></div>
+
 <!-- OpenAI Config Modal -->
 <div id="openai-modal" class="hidden fixed inset-0 bg-black/80 z-[200] flex items-center justify-center p-4">
     <div class="bg-[#161B22] border border-gray-700 rounded-2xl p-6 max-w-md w-full">
@@ -6435,7 +6399,57 @@ Responda em JSON exato sem markdown:
     // Garante que todas as funções de modal e IA fiquem acessíveis globalmente
     document.addEventListener('DOMContentLoaded', function() {
 
-        // --- Supabase Modal ---
+        // --- Admin Password Protection ---
+        const DEFAULT_ADMIN_PASS = 'zeus2024'; // Senha padrão inicial
+
+        window.openAdminConfig = function() {
+            document.getElementById('admin-pass-input').value = '';
+            document.getElementById('admin-pass-error').classList.add('hidden');
+            document.getElementById('admin-password-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('admin-pass-input').focus(), 100);
+        };
+
+        window.checkAdminPass = function() {
+            const input = document.getElementById('admin-pass-input').value;
+            const savedPass = localStorage.getItem('zeus_admin_pass') || DEFAULT_ADMIN_PASS;
+            if (input === savedPass) {
+                document.getElementById('admin-password-modal').classList.add('hidden');
+                openAdminPanel();
+            } else {
+                document.getElementById('admin-pass-error').classList.remove('hidden');
+                document.getElementById('admin-pass-input').value = '';
+                document.getElementById('admin-pass-input').focus();
+            }
+        };
+
+        window.closeAdminPassModal = function() {
+            document.getElementById('admin-password-modal').classList.add('hidden');
+        };
+
+        window.openAdminPanel = function() {
+            // Preenche campos com valores salvos
+            const sbUrl = localStorage.getItem('zeus_supabase_url') || '';
+            const sbKey = localStorage.getItem('zeus_supabase_key') || '';
+            const aiKey = localStorage.getItem('zeus_openai_key') || '';
+            document.getElementById('supabase-url-input').value = sbUrl;
+            document.getElementById('supabase-key-input').value = sbKey ? '••••••••••••' : '';
+            document.getElementById('openai-key-input').value = aiKey ? '••••••••••••' : '';
+            document.getElementById('admin-panel-modal').classList.remove('hidden');
+        };
+
+        window.closeAdminPanel = function() {
+            document.getElementById('admin-panel-modal').classList.add('hidden');
+        };
+
+        window.changeAdminPass = function() {
+            const nova = document.getElementById('new-admin-pass').value.trim();
+            if (!nova || nova.length < 4) { alert('Senha deve ter pelo menos 4 caracteres!'); return; }
+            localStorage.setItem('zeus_admin_pass', nova);
+            document.getElementById('new-admin-pass').value = '';
+            alert('✅ Senha alterada com sucesso!');
+        };
+
+        // --- Supabase Modal (agora dentro do painel admin) ---
         window.openSupabaseConfig = function() {
             const modal = document.getElementById('supabase-modal');
             if (!modal) return;
