@@ -1,1 +1,1 @@
-# zeus-divine.app
+# zeus-divine
